@@ -4,6 +4,12 @@ Instead of managing both an OS and Kubernetes, use [talos](https://www.talos.dev
 
 Assumption is that the cluster will be on a layer 2 isolated subnet (to allow for firewalling enhancements later) and a gateway with two interfaces (one for LAN and one for the cluster network).  Arguably this could be done with VLANs as well.
 
+## Cluster Storage Options
+
+* For the old NUCs in use, Mayastor has too many CPU requirements
+* Longhorn requires iSCSI and touches the host too much, does not play well with read only root system
+* There is [Talos documentation](https://www.talos.dev/v1.2/kubernetes-guides/configuration/replicated-local-storage-with-openebs-jiva/) using OpenEBS Jiva (NUC has single disk), and OpenEBS uses user space only
+
 ## Local Prep
 
 Install kubectl, talosctl, vcluster, kubectx, k9s, kube-ps1, and kubens (mostly by using [arkade](https://github.com/alexellis/arkade) but for missing things, brew/apt, etc.
