@@ -48,6 +48,8 @@ Follow the [Getting Started](|https://www.talos.dev/v1.2/introduction/getting-st
   ```
   allowSchedulingOnControlPlanes: true
   ```
+* allow the openebs namespace to have some privileges by updating cluster.apiServer.admissionControl[0].configuration.exemptions.namespaces to also include `openebs`
+  
 
 ## Prepare Network 
 
