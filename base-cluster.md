@@ -44,6 +44,10 @@ Follow the [Getting Started](|https://www.talos.dev/v1.2/introduction/getting-st
     source: /var/openebs/local
     options: [bind, rshared, rw]
   ```
+* allow workloads to be scheduled on the control plane in the `cluster` section:
+  ```
+  allowSchedulingOnControlPlanes: true
+  ```
 
 ## Prepare Network 
 
