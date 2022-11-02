@@ -30,9 +30,15 @@ Talos install makes the USB stick unbootable, re-run this each time, replace the
 sudo dd if=/tmp/talos-amd64.iso of=/dev/sdX conv=fdatasync bs=4M
 ```
 
-Follow the [Getting Started](|https://www.talos.dev/v1.2/introduction/getting-started/) guide for talos but
+Follow the [Getting Started](https://www.talos.dev/v1.2/introduction/getting-started/) guide for talos but
 
-* make sure the VIP is configured in `controlplane.yaml`:
+* make sure the VIP is configured in `controlplane.yaml` at `machine.network.interfaces`:
+  ```
+  - interface: eth0
+    dhcp: true
+    vip:
+      ip: 192.168.8.19 # Specifies the IP address to be used.
+  ```
 * append the iscsi extension (for CSI) at `machine.install.extensions`:
   ```
   - image: ghcr.io/siderolabs/iscsi-tools:v0.1.1
