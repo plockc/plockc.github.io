@@ -141,6 +141,12 @@ spec:
 EOF
 ```
 
+Get the `admin` password
+
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+
 ## Install LoadBalancer
 
 Uses Argo to install, and add a service group for available IPs
