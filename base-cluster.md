@@ -94,7 +94,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 
 ## Install LoadBalancer
 
-Uses Argo to install
+Uses Argo to install, and add a service group for available IPs
 ```
 kubectl apply -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
@@ -117,5 +117,46 @@ spec:
   destination:
     server: "https://kubernetes.default.svc"
     namespace: purelb
+---
+apiVersion: purelb.io/v1
+kind: ServiceGroup
+metadata:
+  name: default
+  namespace: purelb
+spec:
+  local:
+    v4pool:
+      aggregation: default
+      pool: 192.168.14.10-192.168.15.254
+      subnet: 192.168.14.0/23
 EOF
 ```
+
+## Install Ingress
+
+Uses Argo to install
+```
+kubectl apply -f - <<EOF
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: traefik
+    repoURL: https://helm.traefik.io/traefik
+    targetRevision: 18.3.0
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: traefik
+EOF
+```
+
