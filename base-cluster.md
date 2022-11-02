@@ -14,10 +14,11 @@ Assumption is that the cluster will be on a layer 2 isolated subnet (to allow fo
 
 Install kubectl, talosctl, vcluster, kubectx, k9s, kube-ps1, and kubens (mostly by using [arkade](https://github.com/alexellis/arkade) but for missing things, brew/apt, etc.
 
-For Mac OS, to add a route to your gateway for the subnet:
+For Mac OS, to add a route to your gateway for the node and LoadBalancer CIDRs, where `gw` is the name/IP of the gateway:
 
 ```
-sudo route -n add -net 192.168.8.0/24 <ip of gateway on the LAN>
+sudo route -n add -net 192.168.8.0/24 gw
+sudo route -n add -net 192.168.14.0/23 gw
 ```
 
 ## Installation Media
@@ -99,6 +100,8 @@ Install Argo, and make it insecure, the incoming traffic will need to go through
 
 Also install the ingress route (traefik specific -- see [docs](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingressroute-crd)
 
+This has a race with the configmap vs starting the pod, might need to restart the server pods for argo, and also should use jsonnet to edit the manifest inline to applying.
+
 ```
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
@@ -121,13 +124,13 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(\'argocd.example.com\`)
+      match: Host(\`argocd.k8s.local\`)
       priority: 10
       services:
         - name: argocd-server
           port: 80
     - kind: Rule
-      match: Host(\`argocd.example.com\`) && Headers(\`Content-Type\`, \`application/grpc\`)
+      match: Host(\`argocd.k8s.local\`) && Headers(\`Content-Type\`, \`application/grpc\`)
       priority: 11
       services:
         - name: argocd-server
