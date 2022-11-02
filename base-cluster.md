@@ -95,8 +95,48 @@ Want to switch to installing via ArgoCD
 
 ## Install Argo
 
+Install Argo, and make it insecure, the incoming traffic will need to go through the LoadBalancer which will terminate the SSL session.  Might want to wireguard between pods . . .
+
+Also install the ingress route (traefik specific -- see [docs](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingressroute-crd)
+
+```
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+  namespace: argocd
+data:
+  server.insecure: "true"
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(\'argocd.example.com\`)
+      priority: 10
+      services:
+        - name: argocd-server
+          port: 80
+    - kind: Rule
+      match: Host(\`argocd.example.com\`) && Headers(\`Content-Type\`, \`application/grpc\`)
+      priority: 11
+      services:
+        - name: argocd-server
+          port: 80
+          scheme: h2c
+  tls:
+    certResolver: default
+EOF
+```
 
 ## Install LoadBalancer
 
