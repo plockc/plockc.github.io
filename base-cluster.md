@@ -48,7 +48,7 @@ Follow the [Getting Started](|https://www.talos.dev/v1.2/introduction/getting-st
   ```
   allowSchedulingOnControlPlanes: true
   ```
-* allow the openebs namespace to have some privileges by updating cluster.apiServer.admissionControl[0].configuration.exemptions.namespaces to also include `openebs`
+* allow the openebs namespace to have some privileges by updating cluster.apiServer.admissionControl[0].configuration.exemptions.namespaces to also include `openebs` and `purelb`
   
 
 ## Prepare Network 
@@ -79,3 +79,43 @@ domain=k8s.local
 
 bootstrap the first node then add the rest.
 
+## Install OpenEBS for CSI Storage
+
+Follow the [Talos Local Storage Guide](https://www.talos.dev/v1.2/kubernetes-guides/configuration/replicated-local-storage-with-openebs-jiva/), some of the steps have already been done above.
+
+It was chosen because it does so much in userspace, which plays well with Talos.
+
+Want to switch to installing via ArgoCD
+
+## Install Argo
+
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+## Install LoadBalancer
+
+Uses Argo to install
+```
+kubectl apply -f - <<EOF
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: purelb
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: purelb
+    repoURL: https://gitlab.com/api/v4/projects/20400619/packages/helm/stable
+    targetRevision: 0.6.4
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: purelb
+EOF
+```
