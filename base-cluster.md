@@ -215,3 +215,10 @@ spec:
 EOF
 ```
 
+## Notes
+
+For the helm charts, can get values to override
+
+```
+helm show values <repo>/<chart>
+```
