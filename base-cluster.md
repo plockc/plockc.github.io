@@ -92,6 +92,12 @@ Follow the [Talos Local Storage Guide](https://www.talos.dev/v1.2/kubernetes-gui
 
 It was chosen because it does so much in userspace, which plays well with Talos.
 
+Make sure to set `storageClass.isDefaultClass: true` for the chart, if you forget:
+
+```
+helm upgrade --namespace openebs --set storageClass.isDefaultClass=true openebs-jiva openebs-jiva/jiva
+```
+
 Want to switch to installing via ArgoCD
 
 ## Install Argo
