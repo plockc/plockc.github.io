@@ -97,6 +97,10 @@ spec:
           value: "10"
         - name: minecraftServer.memory
           value: "5000M"
+        - name: persistence.dataDir.enabled
+          value: "true"
+        - name: persistence.dataDir.Size
+          value: "3Gi"
   syncPolicy:
     automated:
       prune: true
