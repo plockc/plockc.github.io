@@ -76,6 +76,8 @@ spec:
     targetRevision: 4.4.0
     helm:
       parameters:
+        - name: resources.requests.memory
+          value: "1000m"
         - name: minecraftServer.eula
           value: "TRUE"
         - name: minecraftServer.serviceType
@@ -85,6 +87,12 @@ spec:
           value: "false"
         - name: minecraftServer.rcon.serviceType
           value: LoadBalancer
+        - name: minecraftServer.maxPlayers
+          value: "10"
+        - name: minecraftServer.memory
+          value: "5000M"
+        - name: minecraftServer.memory
+          value: "5000M"
   syncPolicy:
     automated:
       prune: true
