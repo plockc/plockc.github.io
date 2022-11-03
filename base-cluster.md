@@ -14,7 +14,7 @@ Assumption is that the cluster will be on a layer 2 isolated subnet (to allow fo
 
 Install kubectl, talosctl, vcluster, kubectx, k9s, kube-ps1, and kubens (mostly by using [arkade](https://github.com/alexellis/arkade) but for missing things, brew/apt, etc.
 
-For Mac OS, to add a route to your gateway for the node and LoadBalancer CIDRs, where `gw` is the name/IP of the gateway:
+For Mac OS, to add a (temporary) route to your gateway for the node and LoadBalancer CIDRs, where `gw` is the name/IP of the gateway:
 
 ```
 sudo route -n add -net 192.168.8.0/24 gw
