@@ -71,9 +71,9 @@ metadata:
 spec:
   project: default
   source:
-    chart: traefik
-    repoURL: https://helm.traefik.io/traefik
-    targetRevision: 18.3.0
+    chart: minecraft
+    repoURL: https://itzg.github.io/minecraft-server-charts/
+    targetRevision: 4.4.0
   syncPolicy:
     automated:
       prune: true
@@ -81,8 +81,8 @@ spec:
     syncOptions:
       - CreateNamespace=true
   destination:
-    server: "https://kubernetes.default.svc"
-    namespace: traefik
+    server: "https://$(kubectl get svc minecraft-cluster  -n minecraft -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+    namespace: minecraft
 EOF
 ```
 
