@@ -74,6 +74,17 @@ spec:
     chart: minecraft
     repoURL: https://itzg.github.io/minecraft-server-charts/
     targetRevision: 4.4.0
+    helm:
+      parameters:
+        - name: minecraftServer.eula
+          value: "TRUE"
+        - name: minecraftServer.serviceType
+          value: LoadBalancer
+        # check out persistence, and rcon secret
+        - name: minecraftServer.rcon.enabled
+          value: false
+        - name: minecraftServer.rcon.serviceType
+          value: LoadBalancer
   syncPolicy:
     automated:
       prune: true
