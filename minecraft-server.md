@@ -77,11 +77,13 @@ spec:
     helm:
       parameters:
         - name: livenessProbe.initialDelaySeconds
-          value: "180"
+          value: "300"
         - name: readinessProbe.initialDelaySeconds
-          value: "180"
+          value: "300"
         - name: resources.requests.memory
-          value: "1000m"
+          value: "5Gi"
+        - name: resources.requests.cpu
+          value: "1200m"
         - name: minecraftServer.eula
           value: "TRUE"
         - name: minecraftServer.serviceType
@@ -93,8 +95,6 @@ spec:
           value: LoadBalancer
         - name: minecraftServer.maxPlayers
           value: "10"
-        - name: minecraftServer.memory
-          value: "5000M"
         - name: minecraftServer.memory
           value: "5000M"
   syncPolicy:
