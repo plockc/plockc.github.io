@@ -52,9 +52,11 @@ ark install vcluster
 ```
 
 Add the cluster to argo, I think it's OK for the kubeconfig to have admin in the vcluster, as cluster will only have minecraft installations and those are all managed solely by argo.
+The first command will write out the kubeconfig needed for the second command.
 
 ```
-vcluster connect minecraft-cluster -- argocd cluster add vcluster_minecraft-cluster_minecraft_admin@nuc
+vcluster connect minecraft-cluster -n minecraft --update-current=false --server=https://192.168.14.12 --kube-config kubeconfig.minecraft.yaml
+argocd --kubeconfig kubeconfig.minecraft.yaml cluster add  vcluster_minecraft-cluster_minecraft_admin@nuc
 ```
 
 Note it is in the minecraft namespace inside the vcluster which is in namespace minecraft.
@@ -82,12 +84,6 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: traefik
 EOF
-```
-
-In case it's needed, this will get the kubeconfig for minecraft:
-
-```
-kubectl get secret -n minecraft vc-minecraft-vcluster --template={{.data.config}} | base64 -d
 ```
 
 ## Troubleshooting
