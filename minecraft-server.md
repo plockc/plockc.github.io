@@ -4,20 +4,20 @@
 
 ## Create vcluster
 
-Get versions
+Get versions, currently 0.12.3
 
 ```
 helm search repo vcluster/vcluster --versions
 ```
 
-Currently 0.12.3
+Expose the vcluster with load balancer so `vcluster connect` doesn't have to do port forward
 
 ```
 kubectl apply -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: minecraft-vcluster
+  name: minecraft-cluster
   namespace: argocd
 spec:
   project: default
@@ -29,6 +29,8 @@ spec:
       parameters:
         - name: vcluster.image
           value: rancher/k3s:v1.23.5-k3s1
+        - name: service.type
+          value: LoadBalancer
   syncPolicy:
     automated:
       prune: true
@@ -41,7 +43,19 @@ spec:
 EOF
 ```
 
-## Install with Argo in the Vcluster
+## Install Virtual Cluster with Argo
+
+Get vcluster >= 0.12.3 (brew has 0.12.11 at the moment)
+
+```
+ark install vcluster
+```
+
+Add the cluster to argo, I think it's OK for the kubeconfig to have admin in the vcluster, as cluster will only have minecraft installations and those are all managed solely by argo.
+
+```
+vcluster connect minecraft-cluster -- argocd cluster add vcluster_minecraft-cluster_minecraft_admin@nuc
+```
 
 Note it is in the minecraft namespace inside the vcluster which is in namespace minecraft.
 
@@ -69,3 +83,15 @@ spec:
     namespace: traefik
 EOF
 ```
+
+In case it's needed, this will get the kubeconfig for minecraft:
+
+```
+kubectl get secret -n minecraft vc-minecraft-vcluster --template={{.data.config}} | base64 -d
+```
+
+## Troubleshooting
+
+### cannot open /proc//ns/mnt: No such file or directory
+
+Double check Talos Local Storage instructions, the config map for openebs has to be applied (and some pods restarted), and the machineconfig patch applied, and make sure _all_ the nodes are upgraded.
