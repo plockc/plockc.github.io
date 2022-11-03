@@ -102,55 +102,32 @@ Want to switch to installing via ArgoCD
 
 ## Install Argo
 
-Install Argo, and make it insecure, the incoming traffic will need to go through the LoadBalancer which will terminate the SSL session.  Might want to wireguard between pods . . .
-
-Also install the ingress route (traefik specific -- see [docs](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingressroute-crd)
-
-This has a race with the configmap vs starting the pod, might need to restart the server pods for argo, and also should use jsonnet to edit the manifest inline to applying.
+Install Argo.  Using the loadbalancer is much simpler than setting up the traefik specific ingressroute (as two protocols are on the same port), and we can't do both as ingress terminates the ssl.  Also avoids insecure traffic in-cluster.
 
 ```
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: argocd-cmd-params-cm
-  namespace: argocd
-data:
-  server.insecure: "true"
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: argocd-server
-  namespace: argocd
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(\`argocd.k8s.local\`)
-      priority: 10
-      services:
-        - name: argocd-server
-          port: 80
-    - kind: Rule
-      match: Host(\`argocd.k8s.local\`) && Headers(\`Content-Type\`, \`application/grpc\`)
-      priority: 11
-      services:
-        - name: argocd-server
-          port: 80
-          scheme: h2c
-  tls:
-    certResolver: default
-EOF
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 ```
 
-Get the `admin` password
+Get the `admin` password for the UI
 
 ```
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+
+Install the CLI
+
+```
+brew install argocd  # or 'ark get argocd'
+```
+
+Log in the CLI as `admin`
+
+```
+argocd login --username admin --insecure \
+  --password $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d) \
+  $(kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
 ## Install LoadBalancer
