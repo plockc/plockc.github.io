@@ -82,7 +82,7 @@ spec:
           value: LoadBalancer
         # check out persistence, and rcon secret
         - name: minecraftServer.rcon.enabled
-          value: false
+          value: "false"
         - name: minecraftServer.rcon.serviceType
           value: LoadBalancer
   syncPolicy:
