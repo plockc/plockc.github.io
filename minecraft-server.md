@@ -76,6 +76,10 @@ spec:
     targetRevision: 4.4.0
     helm:
       parameters:
+        - name: livenessProbe.initialDelaySeconds
+          value: "180"
+        - name: readinessProbe.initialDelaySeconds
+          value: "180"
         - name: resources.requests.memory
           value: "1000m"
         - name: minecraftServer.eula
