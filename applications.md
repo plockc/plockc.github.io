@@ -11,13 +11,17 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: sealed-secrets
+    namespace: kube-system
     server: https://kubernetes.default.svc
   project: default
   source:
     chart: sealed-secrets
     repoURL: https://bitnami-labs.github.io/sealed-secrets
     targetRevision: 2.7.0
+    helm:
+      parameters:
+        - name: fullnameOverride
+          value: sealed-secrets-controller
   syncPolicy:
     automated:
       prune: true
