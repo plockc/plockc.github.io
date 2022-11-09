@@ -1,9 +1,12 @@
-These will install applications into the local cluster
+#########################
+###  This manifest is for
+###  - Sealed Secrets
+###  - Pure LB
+#########################
 
-## kubeseal
-
-```
-kubectl apply -f - <<EOF
+######################
+###  Sealed Secrets
+######################
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -30,15 +33,10 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
-EOF
-```
-
-
-
-## purelb
-
-```
-kubectl apply -f - <<EOF
+---
+######################
+###  Pure LB
+######################
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -59,6 +57,3 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
-EOF
-```
-
