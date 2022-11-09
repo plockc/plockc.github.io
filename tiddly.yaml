@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tiddly
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tiddly
+  template:
+    metadata:
+      labels:
+        app: tiddly  
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: init
+          image: elasticdog/tiddlywiki:5.1.23
+          command: [sh, "-c", "tiddlywiki mywiki --init server || echo Wiki Already created"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: data
+              mountPath: /tiddlywiki
+      containers:
+        - name: web
+          image: elasticdog/tiddlywiki:5.1.23
+          ports:
+            - containerPort: 8080
+          args: [mywiki, "--listen", "host=0.0.0.0"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          volumeMounts:
+            - name: data
+              mountPath: /tiddlywiki
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: tiddly
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tiddly
+spec:
+  accessModes: [ReadWriteOnce]
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tiddly
+spec:
+  selector:
+    app: tiddly
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
