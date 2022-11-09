@@ -14,7 +14,7 @@ Assumption is that the cluster will be on a layer 2 isolated subnet (to allow fo
 
 Install kubectl, talosctl, vcluster, kubectx, k9s, kube-ps1, and kubens (mostly by using [arkade](https://github.com/alexellis/arkade) but for missing things, brew/apt, etc.
 
-For Mac OS, to add a route to your gateway for the node and LoadBalancer CIDRs, where `gw` is the name/IP of the gateway:
+For Mac OS, to add a (temporary) route to your gateway for the node and LoadBalancer CIDRs, where `gw` is the name/IP of the gateway:
 
 ```
 sudo route -n add -net 192.168.8.0/24 gw
@@ -92,59 +92,42 @@ Follow the [Talos Local Storage Guide](https://www.talos.dev/v1.2/kubernetes-gui
 
 It was chosen because it does so much in userspace, which plays well with Talos.
 
+Make sure to set `storageClass.isDefaultClass: true` for the chart, if you forget:
+
+```
+helm upgrade --namespace openebs --set storageClass.isDefaultClass=true openebs-jiva openebs-jiva/jiva
+```
+
 Want to switch to installing via ArgoCD
 
 ## Install Argo
 
-Install Argo, and make it insecure, the incoming traffic will need to go through the LoadBalancer which will terminate the SSL session.  Might want to wireguard between pods . . .
-
-Also install the ingress route (traefik specific -- see [docs](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#ingressroute-crd)
-
-This has a race with the configmap vs starting the pod, might need to restart the server pods for argo, and also should use jsonnet to edit the manifest inline to applying.
+Install Argo.  Using the loadbalancer is much simpler than setting up the traefik specific ingressroute (as two protocols are on the same port), and we can't do both as ingress terminates the ssl.  Also avoids insecure traffic in-cluster.
 
 ```
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: argocd-cmd-params-cm
-  namespace: argocd
-data:
-  server.insecure: "true"
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: argocd-server
-  namespace: argocd
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(\`argocd.k8s.local\`)
-      priority: 10
-      services:
-        - name: argocd-server
-          port: 80
-    - kind: Rule
-      match: Host(\`argocd.k8s.local\`) && Headers(\`Content-Type\`, \`application/grpc\`)
-      priority: 11
-      services:
-        - name: argocd-server
-          port: 80
-          scheme: h2c
-  tls:
-    certResolver: default
-EOF
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 ```
 
-Get the `admin` password
+Get the `admin` password for the UI
 
 ```
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+
+Install the CLI
+
+```
+brew install argocd  # or 'ark get argocd'
+```
+
+Log in the CLI as `admin`
+
+```
+argocd login --username admin --insecure \
+  --password $(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d) \
+  $(kubectl get svc argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
 ## Install LoadBalancer
