@@ -11,6 +11,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
+    # this is where kubeseal expects it
     namespace: kube-system
     server: https://kubernetes.default.svc
   project: default
@@ -20,6 +21,7 @@ spec:
     targetRevision: 2.7.0
     helm:
       parameters:
+        # change name to match what kubeseal expects
         - name: fullnameOverride
           value: sealed-secrets-controller
   syncPolicy:
