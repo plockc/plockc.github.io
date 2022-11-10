@@ -8,7 +8,7 @@ spec:
   source:
     chart: rcon-web-admin
     repoURL: https://itzg.github.io/minecraft-server-charts/
-    targetRevision: 4.4.0
+    targetRevision: "1.0.0"
     helm:
       parameters:
         - name: service.type
