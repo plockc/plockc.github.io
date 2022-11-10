@@ -18,7 +18,7 @@ spec:
         - name: ui.externalPort
           value: "443"
   ignoreDifferences:
-    - group: admissionregistration.k8s.io
+    - name: vault-agent-injector-cfg
       kind: MutatingWebhookConfiguration
       jsonPointers:
         - /webhooks[*].clientConfig.caBundle
