@@ -21,7 +21,7 @@ spec:
     - group: admissionregistration.k8s.io
       kind: MutatingWebhookConfiguration
       jsonPointers:
-        - webhooks[*].clientConfig.caBundle
+        - /webhooks[*].clientConfig.caBundle
   syncPolicy:
     automated:
       prune: true
