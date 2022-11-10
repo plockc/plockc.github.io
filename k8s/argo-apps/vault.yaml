@@ -22,7 +22,7 @@ spec:
       group: "*"
       kind: MutatingWebhookConfiguration
       jsonPointers:
-        - /webhooks/1/clientConfig/caBundle
+        - /webhooks/0/clientConfig/caBundle
   syncPolicy:
     automated:
       prune: true
