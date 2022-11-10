@@ -19,9 +19,11 @@ spec:
           value: "443"
   ignoreDifferences:
     - name: vault-agent-injector-cfg
+      group: "*"
       kind: MutatingWebhookConfiguration
       jsonPointers:
         - /webhooks.clientConfig.caBundle
+        - /webhooks[*].clientConfig.caBundle
   syncPolicy:
     automated:
       prune: true
