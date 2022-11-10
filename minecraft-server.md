@@ -75,7 +75,7 @@ EOF
 
 After the minecraft namespace is created
 ```
-kubectl apply -f minecraft-rcon-secret.yaml
+kubectl apply -n minecraft -f minecraft-rcon-secret.yaml
 ```
 
 ## Troubleshooting
