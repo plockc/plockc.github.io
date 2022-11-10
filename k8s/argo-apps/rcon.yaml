@@ -17,6 +17,8 @@ spec:
           value: LoadBalancer
         - name: rconWeb.rconPasswordExistingSecret
           value: minecraft
+        - name: rconWeb.rconHost
+          value: minecraft-minecraft
   syncPolicy:
     automated:
       prune: true
