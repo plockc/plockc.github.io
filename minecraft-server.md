@@ -11,20 +11,16 @@ Created a [sealed-secret](https://docs.bitnami.com/tutorials/sealed-secrets) for
 ```
 touch minecraft-rcon-secret.json
 chmod 600 minecraft-rcon-secret.json
-cat > rcon-password <<<"supersecret"
-```
-
-then create the sealed secret resource spec
-```
-kubectl create secret generic --dry-run -output json \
-  mysecret  --from-literal=rcon-password=$(cat rcon-password) |
-  kubeseal > minecraft-rcon-secret.json
+echo -n "supersekret" \
+  | kubectl create secret generic minecraft --dry-run=client --from-file=rcon-password=/dev/stdin -o yaml \
+  | kubeseal -o yaml \
+  > minecraft-rcon-secret.yaml
 ```
 
 ## Install Minecraft Chart
 
 ```
-kubectl apply -f minecraft-rcon-secret.json
+kubectl apply -f minecraft-rcon-secret.yaml
 kubectl apply -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
