@@ -8,6 +8,8 @@ Created a [sealed-secret](https://docs.bitnami.com/tutorials/sealed-secrets) for
 
 **Note: Change the password in the command below.**
 
+Example is at [argo-apps/minecraft-sealed-secret.yaml](argo-apps/minecraft-sealed-secret.yaml)
+
 ```
 touch minecraft-rcon-secret.json
 chmod 600 minecraft-rcon-secret.json
@@ -17,66 +19,11 @@ echo -n "supersekret" \
   > minecraft-rcon-secret.yaml
 ```
 
-## Install Minecraft Chart
+Install the secret after the minecraft namespace is created.
 
-```
-kubectl apply -f - <<EOF
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: minecraft
-  namespace: argocd
-spec:
-  project: default
-  source:
-    chart: minecraft
-    repoURL: https://itzg.github.io/minecraft-server-charts/
-    targetRevision: 4.4.0
-    helm:
-      parameters:
-        - name: livenessProbe.initialDelaySeconds
-          value: "300"
-        - name: readinessProbe.initialDelaySeconds
-          value: "300"
-        - name: resources.requests.memory
-          value: "5Gi"
-        - name: resources.requests.cpu
-          value: "1200m"
-        - name: minecraftServer.eula
-          value: "TRUE"
-        - name: minecraftServer.serviceType
-          value: LoadBalancer
-        # check out persistence, and rcon secret
-        - name: minecraftServer.rcon.enabled
-          value: "true"
-        - name: minecraftServer.rcon.serviceType
-          value: LoadBalancer
-        - name: minecraftServer.rcon.existingSecret
-          value: minecraft
-        - name: minecraftServer.maxPlayers
-          value: "10"
-        - name: minecraftServer.memory
-          value: "5000M"
-        - name: persistence.dataDir.enabled
-          value: "true"
-        - name: persistence.dataDir.Size
-          value: "3Gi"
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-  destination:
-    server: "https://kubernetes.default.svc"
-    namespace: minecraft
-EOF
-```
+## Installation
 
-After the minecraft namespace is created
-```
-kubectl apply -n minecraft -f minecraft-rcon-secret.yaml
-```
+The ArgoCD [Application Manifest](argo-apps/minecraft.yaml) will install Minecraft and expose LoadBalancer services for Minecraft and RCON.
 
 ## Troubleshooting
 

@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: purelb
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: purelb
+    repoURL: https://gitlab.com/api/v4/projects/20400619/packages/helm/stable
+    targetRevision: 0.6.4
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: purelb

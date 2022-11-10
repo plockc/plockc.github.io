@@ -1,0 +1,17 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: tiddly-daily
+  namespace: velero
+spec:
+  schedule: '@daily'
+  template:
+    csiSnapshotTimeout: 0s
+    hooks: {}
+    includedNamespaces: ['*']
+    labelSelector:
+      matchLabels:
+        app: tiddly
+    metadata: {}
+    ttl: 0s
+  useOwnerReferencesInBackup: false

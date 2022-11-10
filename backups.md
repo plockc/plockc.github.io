@@ -46,28 +46,10 @@ velero install \
 
 ## Define Backup
 
+Single shot
+
 ```
 velero backup create nginx-backup --default-volumes-to-restic --selector app=tiddly
 ```
 
-```
-kubectl apply -f - <<EOF
-apiVersion: velero.io/v1
-kind: Schedule
-metadata:
-  name: tiddly-daily
-  namespace: velero
-spec:
-  schedule: '@daily'
-  template:
-    csiSnapshotTimeout: 0s
-    hooks: {}
-    includedNamespaces: ['*']
-    labelSelector:
-      matchLabels:
-        app: tiddly
-    metadata: {}
-    ttl: 0s
-  useOwnerReferencesInBackup: false
-EOF
-```
+Recurring backup manifest is in [velero-backups](velero-backups/tiddly.yaml)

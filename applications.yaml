@@ -1,59 +1,13 @@
-#########################
-###  This manifest is for
-###  - Sealed Secrets
-###  - Pure LB
-#########################
-
-######################
-###  Sealed Secrets
-######################
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sealed-secrets
-  namespace: argocd
+  name: all-apps
 spec:
   destination:
-    # this is where kubeseal expects it
-    namespace: kube-system
+    namespace: argocd
     server: https://kubernetes.default.svc
   project: default
   source:
-    chart: sealed-secrets
-    repoURL: https://bitnami-labs.github.io/sealed-secrets
-    targetRevision: 2.7.0
-    helm:
-      parameters:
-        # change name to match what kubeseal expects
-        - name: fullnameOverride
-          value: sealed-secrets-controller
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
----
-######################
-###  Pure LB
-######################
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: purelb
-  namespace: argocd
-spec:
-  destination:
-    namespace: purelb
-    server: https://kubernetes.default.svc
-  project: default
-  source:
-    chart: purelb
-    repoURL: https://gitlab.com/api/v4/projects/20400619/packages/helm/stable
-    targetRevision: 0.6.4
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - CreateNamespace=true
+    path: k8s/argo-apps
+    repoURL: https://github.com/plockc/plockc.github.io/
+    targetRevision: HEAD

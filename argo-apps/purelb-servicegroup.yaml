@@ -1,0 +1,11 @@
+apiVersion: purelb.io/v1
+kind: ServiceGroup
+metadata:
+  name: default
+  namespace: purelb
+spec:
+  local:
+    v4pool:
+      aggregation: default
+      pool: 192.168.14.10-192.168.15.254
+      subnet: 192.168.14.0/23
