@@ -17,12 +17,18 @@ spec:
           value: LoadBalancer
         - name: ui.externalPort
           value: "443"
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+      jsonPointers:
+        - webhooks[*].clientConfig.caBundle
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true
   destination:
     server: "https://kubernetes.default.svc"
     namespace: vault
