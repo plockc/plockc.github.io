@@ -11,6 +11,8 @@ spec:
     targetRevision: 4.4.0
     helm:
       parameters:
+        - name: minecraftServer.worldSaveName
+          value: "connerworld"
         - name: livenessProbe.initialDelaySeconds
           value: "300"
         - name: readinessProbe.initialDelaySeconds
