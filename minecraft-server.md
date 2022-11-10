@@ -52,7 +52,7 @@ spec:
         - name: minecraftServer.rcon.serviceType
           value: LoadBalancer
         - name: minecraftServer.rcon.existingSecret
-          value: "true"
+          value: minecraft
         - name: minecraftServer.maxPlayers
           value: "10"
         - name: minecraftServer.memory
