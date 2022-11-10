@@ -20,7 +20,6 @@ echo -n "supersekret" \
 ## Install Minecraft Chart
 
 ```
-kubectl apply -f minecraft-rcon-secret.yaml
 kubectl apply -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -72,6 +71,8 @@ spec:
     server: "https://$(kubectl get svc minecraft-cluster  -n minecraft -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
     namespace: minecraft
 EOF
+
+kubectl apply -f minecraft-rcon-secret.yaml
 ```
 
 ## Troubleshooting
