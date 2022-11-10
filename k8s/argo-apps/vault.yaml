@@ -21,7 +21,7 @@ spec:
     - name: vault-agent-injector-cfg
       kind: MutatingWebhookConfiguration
       jsonPointers:
-        - /webhooks[*].clientConfig.caBundle
+        - /webhooks.clientConfig.caBundle
   syncPolicy:
     automated:
       prune: true
