@@ -1,14 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: all-apps
+  name: tiddly
   namespace: argocd
 spec:
   destination:
-    namespace: argocd
+    namespace: tiddly
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: k8s/argo-apps
     repoURL: https://github.com/plockc/plockc.github.io/
     targetRevision: HEAD
+    path: k8s/manifests
+    directory:
+      include: tiddly.yaml

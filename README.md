@@ -32,9 +32,9 @@ Want to switch to installing via ArgoCD
 
 ## Argo CD Managed Applications
 
-* Secrets - [sealed-secrets](https://github.com/bitnami-labs/sealed-secrets), managed with [argo-apps/sealed-secrets.yaml](argo-apps/sealed-secrets.yaml).
-* Backups - Persistent Volumes are backed up with [Velero](https://velero.io/docs/v1.9/), here is [how](backups.md).
-* LoadBalancer - PureLB deployment managed by [argo-apps/purelb.yaml](argo-apps/purelb.yaml), and the service group (available IPs) is a [ServiceGroup resource](argo-apps/purelb-servicegroup.yaml) using the 192.168.14.0/23 subnet.
-* Ingress - Traefik deployment is managed at [argo-apps/traefik.yaml](argo-apps/traefik.yaml).
-* [TiddlyWiki](argo-apps/tiddly.yaml)
+* Secrets - [sealed-secrets](https://github.com/bitnami-labs/sealed-secrets), managed with [argo-apps/sealed-secrets.yaml](argo-apps/sealed-secrets.yaml)
+* Backups - Persistent Volumes are backed up with [Velero](https://velero.io/docs/v1.9/), here is [how](backups.md)
+* LoadBalancer - PureLB deployment managed by [argo-apps/purelb.yaml](argo-apps/purelb.yaml), and the service group (available IPs) is a [ServiceGroup resource](argo-apps/purelb-servicegroup.yaml) using the 192.168.14.0/23 subnet
+* Ingress - Traefik deployment is managed at [argo-apps/traefik.yaml](argo-apps/traefik.yaml)
+* [TiddlyWiki manifest](manifests/tiddly.yaml) managed by [argo-apps/tiddly.yaml](argo-apps/tiddly.yaml)
 * [Minecraft](minecraft.md)
