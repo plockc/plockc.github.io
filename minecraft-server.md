@@ -68,7 +68,7 @@ spec:
     syncOptions:
       - CreateNamespace=true
   destination:
-    server: "https://$(kubectl get svc minecraft-cluster  -n minecraft -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+    server: "https://kubernetes.default.svc"
     namespace: minecraft
 EOF
 ```
