@@ -2,7 +2,29 @@
 
 [itzg](https://github.com/itzg/docker-minecraft-server/blob/master/README.md) did all the heavy lifting for making minecraft into a container, and creating [charts](https://github.com/itzg/minecraft-server-charts/tree/master/charts/minecraft-proxy).
 
+## Install Minecraft RCON sealed secret
+
+Created a [sealed-secret](https://docs.bitnami.com/tutorials/sealed-secrets) for the [rcon](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) (remote console) which can be controlled by various client implementations.
+
+**Note: Change the password in the command below.**
+
 ```
+touch minecraft-rcon-secret.json
+chmod 600 minecraft-rcon-secret.json
+cat > rcon-password <<<"supersecret"
+```
+
+then create the sealed secret resource spec
+```
+kubectl create secret generic --dry-run -output json \
+  mysecret  --from-literal=rcon-password=$(cat rcon-password) |
+  kubeseal > minecraft-rcon-secret.json
+```
+
+## Install Minecraft Chart
+
+```
+kubectl apply -f minecraft-rcon-secret.json
 kubectl apply -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
 kind: Application
