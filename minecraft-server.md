@@ -71,7 +71,10 @@ spec:
     server: "https://$(kubectl get svc minecraft-cluster  -n minecraft -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
     namespace: minecraft
 EOF
+```
 
+After the minecraft namespace is created
+```
 kubectl apply -f minecraft-rcon-secret.yaml
 ```
 
