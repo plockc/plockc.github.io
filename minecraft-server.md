@@ -31,9 +31,11 @@ spec:
           value: LoadBalancer
         # check out persistence, and rcon secret
         - name: minecraftServer.rcon.enabled
-          value: "false"
+          value: "true"
         - name: minecraftServer.rcon.serviceType
           value: LoadBalancer
+        - name: minecraftServer.rcon.existingSecret
+          value: "true"
         - name: minecraftServer.maxPlayers
           value: "10"
         - name: minecraftServer.memory
