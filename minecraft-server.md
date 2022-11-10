@@ -2,6 +2,23 @@
 
 [itzg](https://github.com/itzg/docker-minecraft-server/blob/master/README.md) did all the heavy lifting for making minecraft into a container, and creating [charts](https://github.com/itzg/minecraft-server-charts/tree/master/charts/minecraft-proxy).
 
+## Install Minecraft RCON sealed secret
+
+Created a [sealed-secret](https://docs.bitnami.com/tutorials/sealed-secrets) for the [rcon](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) (remote console) which can be controlled by various client implementations.
+
+**Note: Change the password in the command below.**
+
+```
+touch minecraft-rcon-secret.json
+chmod 600 minecraft-rcon-secret.json
+echo -n "supersekret" \
+  | kubectl create secret generic minecraft --dry-run=client --from-file=rcon-password=/dev/stdin -o yaml \
+  | kubeseal -o yaml \
+  > minecraft-rcon-secret.yaml
+```
+
+## Install Minecraft Chart
+
 ```
 kubectl apply -f - <<EOF
 apiVersion: argoproj.io/v1alpha1
@@ -31,9 +48,11 @@ spec:
           value: LoadBalancer
         # check out persistence, and rcon secret
         - name: minecraftServer.rcon.enabled
-          value: "false"
+          value: "true"
         - name: minecraftServer.rcon.serviceType
           value: LoadBalancer
+        - name: minecraftServer.rcon.existingSecret
+          value: minecraft
         - name: minecraftServer.maxPlayers
           value: "10"
         - name: minecraftServer.memory
@@ -49,9 +68,14 @@ spec:
     syncOptions:
       - CreateNamespace=true
   destination:
-    server: "https://$(kubectl get svc minecraft-cluster  -n minecraft -o jsonpath='{.status.loadBalancer.ingress[0].ip}')"
+    server: "https://kubernetes.default.svc"
     namespace: minecraft
 EOF
+```
+
+After the minecraft namespace is created
+```
+kubectl apply -n minecraft -f minecraft-rcon-secret.yaml
 ```
 
 ## Troubleshooting
