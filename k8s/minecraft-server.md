@@ -21,6 +21,30 @@ echo -n "supersekret" \
 
 Install the secret after the minecraft namespace is created.
 
+```
+kubectl apply -f minecraft-rcon-secret.yaml
+```
+
+## Install RCON Web Admin sealed secret
+
+The Web interface for RCON has a separate user / password
+
+```
+touch web-rcon-secret.json
+chmod 600 web-rcon-secret.json
+echo -n "supersekret" \
+  | kubectl create secret generic rcon --dry-run=client --from-file=password=/dev/stdin -o yaml \
+  | kubeseal -o yaml \
+  > web-rcon-secret.yaml
+```
+
+Install the secret after the minecraft namespace is created.
+
+```
+kubectl apply -f web-rcon-secret.yaml
+```
+
+
 ## Installation
 
 The ArgoCD [Application Manifest](argo-apps/minecraft.yaml) will install Minecraft and expose LoadBalancer services for Minecraft and RCON.
