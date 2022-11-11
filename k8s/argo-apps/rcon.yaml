@@ -13,6 +13,11 @@ spec:
       parameters:
         - name: rconWeb.passwordExistingSecret
           value: rcon
+        - name: rconWeb.isAdmin
+          value: "true"
+        # think this is workaround to disable websocket env vars
+        - name: ingress.enabled
+          value: "true"
         - name: service.type
           value: LoadBalancer
         - name: rconWeb.rconPasswordExistingSecret
