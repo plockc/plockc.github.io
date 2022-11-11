@@ -18,7 +18,7 @@ spec:
         - name: rconWeb.rconPasswordExistingSecret
           value: minecraft
         - name: rconWeb.rconHost
-          value: minecraft-minecraft
+          value: minecraft-minecraft-rcon
   syncPolicy:
     automated:
       prune: true
