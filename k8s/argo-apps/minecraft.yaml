@@ -13,6 +13,8 @@ spec:
       parameters:
         - name: minecraftServer.worldSaveName
           value: "connerworld"
+        - name: startupProbe.enabled
+          value: "true"
         - name: startupProbe.failureThreshold
           value: "80"
         - name: startupProbe.periodSeconds
