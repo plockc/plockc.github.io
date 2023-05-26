@@ -14,3 +14,9 @@ spec:
     path: k8s/manifests
     directory:
       include: tiddly.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true

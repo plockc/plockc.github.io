@@ -4,11 +4,17 @@ metadata:
   name: all-apps
   namespace: argocd
 spec:
-  destination:
-    namespace: argocd
-    server: https://kubernetes.default.svc
   project: default
   source:
     path: k8s/argo-apps
     repoURL: https://github.com/plockc/plockc.github.io/
-    targetRevision: HEAD
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    namespace: argocd
+    server: https://kubernetes.default.svc
