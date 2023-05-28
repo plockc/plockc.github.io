@@ -85,3 +85,12 @@ domain=k8s.local
 ## Create Cluster
 
 bootstrap the first node then add the rest.
+
+## Upgrade cluster
+
+Find the latest [release](https://github.com/siderolabs/talos/releases) then upgrade a node at a time.
+
+```
+talosctl upgrade --nodes t1 --image ghcr.io/siderolabs/installer:v1.4.4
+```
+

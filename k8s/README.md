@@ -14,18 +14,29 @@ Next apply the [applications.yaml manifest](applications.yaml) for Argo "Applica
 
 ## Persistent Volumes
 
-Follow the [Talos Local Storage Guide](https://www.talos.dev/v1.2/kubernetes-guides/configuration/replicated-local-storage-with-openebs-jiva/) to install OpenEBS Jiva, some of the steps have already been done above.
+Rook (Ceph) requires way too much memory (only have 8GB) and resources (only 4 virtual thread CPU) to run.
+Longhorn requires a regular OS worth of utilities installed.
+Mayastor from OpenEBS requires CPU instructions that are not available on the NUCs being used (very old)
+Will use Jiva
+
+**Make sure to use `--preserve` when upgrading talos linux**
+
+Follow the [Talos Local Storage Guide](https://www.talos.dev/v1.4/kubernetes-guides/configuration/replicated-local-storage-with-openebs-jiva/) to install OpenEBS Jiva, some of the steps have already been done above.
 
 It was chosen because it does so much in userspace, which plays well with Talos.
 
-Make sure to set `storageClass.isDefaultClass: true` for the chart, if you forget:
+Make sure to set `storageClass.isDefaultClass: true` for the chart
 
+Use latest version found in [releases](https://github.com/openebs/jiva/releases)
 ```
-helm upgrade --namespace openebs --set storageClass.isDefaultClass=true openebs-jiva openebs-jiva/jiva
+helm repo add openebs-jiva https://openebs.github.io/jiva-operator
+helm repo update
+helm upgrade --install --create-namespace --set storageClass.isDefaultClass=true --namespace openebs --version 3.4.0 openebs-jiva openebs-jiva/jiva
 ```
 
 Want to switch to installing via ArgoCD
 
+---
 
 ## Argo CD Managed Applications
 
