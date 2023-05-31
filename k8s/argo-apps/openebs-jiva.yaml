@@ -11,7 +11,7 @@ spec:
   sources:
     - chart: jiva
       repoURL: https://openebs.github.io/jiva-operator
-      targetRevision: jiva-3.4.0
+      targetRevision: v3.4.0
       helm:
         parameters: [] 
     - path: k8s/argoapps/openebs-jiva-patches
