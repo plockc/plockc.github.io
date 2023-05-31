@@ -9,12 +9,16 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   sources:
-    - path: k8s/argo-apps/openebs-jiva-patches/helmchart.yaml
+    - path: k8s/argo-apps/openebs-jiva-patches
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
-    - path: k8s/argo-apps/openebs-jiva-patches/patches.yaml
+      directory:
+        include: 'helmchart.yaml'
+    - path: k8s/argo-apps/openebs-jiva-patches
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
+      directory:
+        include: 'patches.yaml'
   syncPolicy:
     automated:
       prune: true
