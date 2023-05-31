@@ -15,7 +15,7 @@ spec:
       directory:
         include: 'csi-node-host-pid.yaml'
   ignoreDifferences:
-    - group: core
+    - group: apps
       kind: DaemonSet
       jsonPointers:
         - /metadata/labels/app.kubernetes.io~1instance

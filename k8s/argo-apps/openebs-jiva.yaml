@@ -23,7 +23,7 @@ spec:
       directory:
         include: 'csi-node-host-pid-app.yaml'
   ignoreDifferences:
-    - group: core
+    - group: apps
       kind: DaemonSet
       jsonPointers:
         - /spec/template/spec/hostPID
