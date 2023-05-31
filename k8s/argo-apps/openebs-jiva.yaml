@@ -18,7 +18,7 @@ spec:
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
       directory:
-        include: 'patches.yaml'
+        include: 'iscsi-admin-configmap.yaml'
   syncPolicy:
     automated:
       prune: true
