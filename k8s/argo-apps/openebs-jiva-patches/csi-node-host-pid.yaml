@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: openebs-jiva-csi-node
-  labels:
-    app.kubernetes.io/instance: openebs-jiva
 spec:
   template:
     spec:
