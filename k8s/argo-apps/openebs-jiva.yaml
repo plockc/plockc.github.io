@@ -9,11 +9,9 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   sources:
-    - path: k8s/argo-apps/openebs-jiva-patches
-      repoURL: https://github.com/plockc/plockc.github.io/
-      targetRevision: HEAD
-      directory:
-        include: 'helmchart.yaml'
+    - chart: jiva
+      repoURL: https://openebs.github.io/jiva-operator
+      targetRevision: v3.4.0
     - path: k8s/argo-apps/openebs-jiva-patches
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
@@ -33,5 +31,9 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    managedNamespaceMetadata:
+      labels: 
+        pod-security.kubernetes.io/enforce: privileged
     syncOptions:
     - ServerSideApply=true
+    - CreateNamespace=true
