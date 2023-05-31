@@ -15,7 +15,7 @@ spec:
       helm:
         parameters:
           - name: "storageClass.isDefaultClass"
-            value: true
+            value: "true"
     - path: k8s/argo-apps/openebs-jiva-patches
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
