@@ -21,7 +21,7 @@ spec:
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
       directory:
-        include: 'csi-node-host-pid.yaml'
+        include: 'csi-node-host-pid-app.yaml'
   ignoreDifferences:
     - group: core
       kind: DaemonSet
@@ -35,5 +35,4 @@ spec:
       labels: 
         pod-security.kubernetes.io/enforce: privileged
     syncOptions:
-    - ServerSideApply=true
     - CreateNamespace=true
