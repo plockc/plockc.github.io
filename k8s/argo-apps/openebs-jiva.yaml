@@ -19,6 +19,16 @@ spec:
       targetRevision: HEAD
       directory:
         include: 'iscsi-admin-configmap.yaml'
+    - path: k8s/argo-apps/openebs-jiva-patches
+      repoURL: https://github.com/plockc/plockc.github.io/
+      targetRevision: HEAD
+      directory:
+        include: 'csi-node-host-pid.yaml'
+  ignoreDifferences:
+    - group: core
+      kind: DaemonSet
+      jsonPointers:
+      - /spec/template/spec/hostPID
   syncPolicy:
     automated:
       prune: true
