@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: openebs-jiva
+  name: openebs-jiva-patches
   namespace: argocd
 spec:
   destination:
@@ -9,13 +9,16 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   sources:
-    - path: k8s/argo-apps/openebs-jiva-patches/helmchart.yaml
+    - path: k8s/argo-apps/openebs-jiva-patches/csi-node-host-pid.yaml
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
-    - path: k8s/argo-apps/openebs-jiva-patches/patches.yaml
+    - path: k8s/argo-apps/openebs-jiva-patches/iscsi-admin-configmap.yaml
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+

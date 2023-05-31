@@ -3,8 +3,6 @@ kind: DaemonSet
 metadata:
   name: openebs-jiva-csi-node
   namespace: openebs
-  annotations:
-    argocd.argoproj.io/hook: PostSync
 spec:
   template:
     spec:
