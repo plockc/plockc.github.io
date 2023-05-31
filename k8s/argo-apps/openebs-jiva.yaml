@@ -26,7 +26,11 @@ spec:
     - group: core
       kind: DaemonSet
       jsonPointers:
-      - /spec/template/spec/hostPID
+        - /spec/template/spec/hostPID
+    - group: core
+      kind: DaemonSet
+      jsonPointers:
+        - /metadata/labels/app.kubernetes.io/instance
   syncPolicy:
     automated:
       prune: true
