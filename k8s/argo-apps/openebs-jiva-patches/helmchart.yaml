@@ -12,8 +12,6 @@ spec:
     chart: jiva
     repoURL: https://openebs.github.io/jiva-operator
     targetRevision: v3.4.0
-    helm:
-      parameters: [] 
   syncPolicy:
     automated:
       prune: true
