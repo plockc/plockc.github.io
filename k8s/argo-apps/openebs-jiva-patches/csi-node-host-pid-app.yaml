@@ -14,6 +14,11 @@ spec:
       targetRevision: HEAD
       directory:
         include: 'csi-node-host-pid.yaml'
+  ignoreDifferences:
+    - group: core
+      kind: DaemonSet
+      jsonPointers:
+        - /metadata/labels/app.kubernetes.io~1instance
   syncPolicy:
     automated:
       selfHeal: true
