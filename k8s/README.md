@@ -14,19 +14,48 @@ Next apply the [applications.yaml manifest](applications.yaml) for Argo "Applica
 
 ## Persistent Volumes
 
-Rook (Ceph) requires way too much memory (only have 8GB) and resources (only 4 virtual thread CPU) to run.
-Longhorn requires a regular OS worth of utilities installed.
-Mayastor from OpenEBS requires CPU instructions that are not available on the NUCs being used (very old)
-Will use Jiva
+### Cluster Storage Options
+
+* For the old NUCs in use, Mayastor has too many CPU requirements
+* Longhorn requires iSCSI and touches the host too much, does not play well with read only root system
+* Rook (Ceph) requires way too much memory (only have 8GB) and resources (only 4 virtual thread CPU) to run.
+* Longhorn requires a regular OS worth of utilities installed.
+* Mayastor from OpenEBS requires CPU instructions that are not available on the NUCs being used (very old)
+* There is [Talos documentation](https://www.talos.dev/v1.2/kubernetes-guides/configuration/replicated-local-storage-with-openebs-jiva/) using OpenEBS Jiva (NUC has single disk), and OpenEBS uses user space only
 
 **Make sure to use `--preserve` when upgrading talos linux**
 
 Follow the [Talos Local Storage Guide](https://www.talos.dev/v1.4/kubernetes-guides/configuration/replicated-local-storage-with-openebs-jiva/) to install OpenEBS Jiva, some of the steps have already been done above.
 
-It was chosen because it does so much in userspace, which plays well with Talos.
+Make sure some of the iscsi configuration has been done: https://www.talos.dev/v1.4/kubernetes-guides/configuration/replicated-local-storage-with-openebs-jiva/#patching-the-jiva-installation
+If this is forgotten, apply, the restart the jiva-ctrl pods (maybe more than once) and the mounting pod to get pods to attach to volume.
 
 Make sure to set `storageClass.isDefaultClass: true` for the chart
 
+### Configure Talos Linux
+
+```
+cat >patch.yaml <<EOF
+- op: add
+  path: /machine/install/extensions
+  value:
+    - image: ghcr.io/siderolabs/iscsi-tools:v0.1.4
+- op: add
+  path: /machine/kubelet/extraMounts
+  value:
+    - destination: /var/openebs/local
+      type: bind
+      source: /var/openebs/local
+      options:
+        - bind
+        - rshared
+        - rw
+EOF
+talosctl -n t1,t2,t3 patch mc -p @patch.yaml
+talosctl upgrade --nodes t1 --image ghcr.io/siderolabs/installer:v1.4.4 --wait
+```
+
+### Install Jiva
 Use latest version found in [releases](https://github.com/openebs/jiva/releases)
 ```
 helm repo add openebs-jiva https://openebs.github.io/jiva-operator

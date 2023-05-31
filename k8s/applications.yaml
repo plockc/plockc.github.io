@@ -9,6 +9,7 @@ spec:
     path: k8s/argo-apps
     repoURL: https://github.com/plockc/plockc.github.io/
     targetRevision: main
+    # intentionally not recursing as we have app-specific patches in sub-dirs
   syncPolicy:
     automated:
       prune: true

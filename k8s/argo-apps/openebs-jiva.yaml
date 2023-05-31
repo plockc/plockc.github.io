@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openebs-jiva
+  namespace: argocd
+spec:
+  destination:
+    namespace: openebs
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - chart: jiva
+      repoURL: https://openebs.github.io/jiva-operator
+      targetRevision: jiva-3.4.0
+      helm:
+        parameters: [] 
+    - path: k8s/argoapps/openebs-jiva-patches
+      repoURL: https://github.com/plockc/plockc.github.io/
+      targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    managedNamespaceMetadata:
+      labels: 
+        pod-security.kubernetes.io/enforce: privileged
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

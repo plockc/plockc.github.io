@@ -4,12 +4,6 @@ Instead of managing both an OS and Kubernetes, use [talos](https://www.talos.dev
 
 DHCP is assumed with static leases.
 
-## Cluster Storage Options
-
-* For the old NUCs in use, Mayastor has too many CPU requirements
-* Longhorn requires iSCSI and touches the host too much, does not play well with read only root system
-* There is [Talos documentation](https://www.talos.dev/v1.2/kubernetes-guides/configuration/replicated-local-storage-with-openebs-jiva/) using OpenEBS Jiva (NUC has single disk), and OpenEBS uses user space only
-
 ## Local Prep
 
 Install kubectl, talosctl, vcluster, kubectx, k9s, kube-ps1, and kubens (mostly by using [arkade](https://github.com/alexellis/arkade) but for missing things, brew/apt, etc.
@@ -90,7 +84,8 @@ bootstrap the first node then add the rest.
 
 Find the latest [release](https://github.com/siderolabs/talos/releases) then upgrade a node at a time.
 
+Make sure to use `--preserve` if the CSI is writing to the node like Jiva
 ```
-talosctl upgrade --nodes t1 --image ghcr.io/siderolabs/installer:v1.4.4
+talosctl upgrade --preserve --nodes t1 --image ghcr.io/siderolabs/installer:v1.4.4 --wait
 ```
 
