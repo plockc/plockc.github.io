@@ -20,6 +20,15 @@ done
 kubectl apply -f applications.yaml
 ```
 
+### Uninstalling
+
+Simply deleting the resources through kubectl may not cascade . . if not try
+
+```
+argocd app delete all-apps
+argocd app delete infra-apps
+```
+
 ## Persistent Volumes
 
 ### Cluster Storage Options
