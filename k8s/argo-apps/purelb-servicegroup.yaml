@@ -3,8 +3,6 @@ kind: ServiceGroup
 metadata:
   name: default
   namespace: purelb
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
 spec:
   local:
     v4pool:

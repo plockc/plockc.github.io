@@ -44,3 +44,4 @@ spec:
         pod-security.kubernetes.io/enforce: privileged
     syncOptions:
     - CreateNamespace=true
+    - PrunePropagationPolicy=background
