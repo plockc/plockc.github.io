@@ -9,8 +9,16 @@ Nodes are based on [talos](https://www.talos.dev) linux images, and installation
 
 After bringing up the cluster, install [Argo CD](https://argo-cd.readthedocs.io/en/stable/), directions in [argo.md](argo.md).
 
-Next apply the [applications.yaml manifest](applications.yaml) for Argo "Application of Applications" 
+Next apply the [infra applications yaml manifest](infra-apps.yaml) and the [applications.yaml manifest](applications.yaml) for Argo "Application of Applications" 
 
+```
+kubectl apply -f infra-apps.yaml
+# wait for the storage class to appear
+while ! kubectl get -o name sc openebs-jiva-csi-default; do
+   echo retying...; sleep 2;
+done
+kubectl apply -f applications.yaml
+```
 
 ## Persistent Volumes
 

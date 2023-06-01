@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    path: k8s/argo-apps
+    path: k8s/infra-apps
     repoURL: https://github.com/plockc/plockc.github.io/
     targetRevision: main
     # intentionally not recursing as we have app-specific patches in sub-dirs

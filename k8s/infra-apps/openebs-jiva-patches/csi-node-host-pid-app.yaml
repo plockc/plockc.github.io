@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openebs-jiva-app
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: openebs
+    server: https://kubernetes.default.svc
+  project: default
+  sources:
+    - path: k8s/argo-apps/openebs-jiva-patches
+      repoURL: https://github.com/plockc/plockc.github.io/
+      targetRevision: HEAD
+      directory:
+        include: 'csi-node-host-pid.yaml'
+  ignoreDifferences:
+    - group: apps
+      kind: DaemonSet
+      jsonPointers:
+        - /metadata/labels/app.kubernetes.io~1instance
+  syncPolicy:
+    automated:
+      selfHeal: true
+    managedNamespaceMetadata:
+      labels: 
+        pod-security.kubernetes.io/enforce: privileged
+    syncOptions:
+    - ServerSideApply=true
+    - Validate=false
+
