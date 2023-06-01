@@ -32,7 +32,7 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - RespectIgnoreDifferences=true
-      - PrunePropagationPolicy=true
+      - PrunePropagationPolicy=background
   destination:
     server: "https://kubernetes.default.svc"
     namespace: vault
