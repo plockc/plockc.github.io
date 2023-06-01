@@ -18,12 +18,12 @@ spec:
         parameters:
           - name: "storageClass.isDefaultClass"
             value: "true"
-    - path: k8s/argo-apps/openebs-jiva-patches
+    - path: k8s/infra-apps/openebs-jiva-patches
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
       directory:
         include: 'iscsi-admin-configmap.yaml'
-    - path: k8s/argo-apps/openebs-jiva-patches
+    - path: k8s/infra-apps/openebs-jiva-patches
       repoURL: https://github.com/plockc/plockc.github.io/
       targetRevision: HEAD
       directory:
