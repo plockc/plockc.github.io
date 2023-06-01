@@ -3,6 +3,10 @@ kind: Application
 metadata:
   name: openebs-jiva-app
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
   destination:
     namespace: openebs
